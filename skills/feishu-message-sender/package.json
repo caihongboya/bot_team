@@ -1,0 +1,13 @@
+{
+  "name": "feishu-message-sender",
+  "version": "1.0.0",
+  "description": "飞书消息发送工具",
+  "author": "OpenClaw Assistant",
+  "license": "MIT",
+  "main": "send_message.py",
+  "scripts": {
+    "start": "python3 send_message.py"
+  },
+  "dependencies": {
+  }
+}
