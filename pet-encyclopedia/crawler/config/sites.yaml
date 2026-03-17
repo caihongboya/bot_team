@@ -1,0 +1,214 @@
+# 内容源站点配置
+# 宠物百科全书爬虫系统
+
+# =============================================================================
+# P0 优先级站点（首批爬取）
+# =============================================================================
+
+sites:
+  # 维基百科（宠物类）
+  wikipedia:
+    name: "维基百科"
+    domain: "zh.wikipedia.org"
+    priority: "P0"
+    base_url: "https://zh.wikipedia.org"
+    
+    # 爬取配置
+    crawl:
+      enabled: true
+      depth: 3
+      max_pages: 5000
+      rate_limit:
+        requests_per_second: 2
+        concurrent_requests: 4
+      respect_robots_txt: true
+    
+    # 目标分类
+    categories:
+      - path: "/wiki/Category:宠物"
+        subcategories: ["猫", "狗", "宠物健康", "宠物饲养"]
+      - path: "/wiki/Category:猫科动物"
+      - path: "/wiki/Category:犬科动物"
+    
+    # 页面解析规则
+    parsing:
+      title_selector: "h1.firstHeading"
+      content_selector: "#mw-content-text"
+      exclude_selectors:
+        - ".navbox"
+        - ".toc"
+        - "#catlinks"
+        - ".printfooter"
+    
+    # 反爬策略
+    anti_crawl:
+      need_proxy: false
+      need_javascript: false
+      login_required: false
+      captcha_risk: "low"
+    
+    # 内容质量
+    quality:
+      expected_word_count: 500
+      language: "zh"
+      content_type: "encyclopedia"
+
+  # 宠物之家
+  pet_home:
+    name: "宠物之家"
+    domain: "pet-home.com"
+    priority: "P0"
+    base_url: "https://www.pet-home.com"
+    
+    crawl:
+      enabled: true
+      depth: 5
+      max_pages: 3000
+      rate_limit:
+        requests_per_second: 0.5
+        concurrent_requests: 1
+      respect_robots_txt: true
+    
+    categories:
+      - path: "/breeds/"
+        name: "品种百科"
+      - path: "/care/"
+        name: "养护知识"
+      - path: "/health/"
+        name: "健康科普"
+    
+    parsing:
+      title_selector: "h1.article-title"
+      content_selector: ".article-content"
+      exclude_selectors:
+        - ".ad"
+        - ".related"
+        - ".comments"
+    
+    anti_crawl:
+      need_proxy: true
+      need_javascript: false
+      login_required: false
+      captcha_risk: "medium"
+    
+    quality:
+      expected_word_count: 800
+      language: "zh"
+      content_type: "vertical"
+
+  # 波奇网
+  boqii:
+    name: "波奇网"
+    domain: "boqii.com"
+    priority: "P0"
+    base_url: "https://www.boqii.com"
+    
+    crawl:
+      enabled: true
+      depth: 4
+      max_pages: 3000
+      rate_limit:
+        requests_per_second: 0.67
+        concurrent_requests: 2
+      respect_robots_txt: true
+    
+    categories:
+      - path: "/article/"
+        name: "宠物百科"
+      - path: "/care/"
+        name: "养护指南"
+    
+    parsing:
+      title_selector: "h1.title"
+      content_selector: ".content"
+      exclude_selectors:
+        - ".ad"
+        - ".recommend"
+    
+    anti_crawl:
+      need_proxy: true
+      need_javascript: true  # 部分动态渲染
+      login_required: false
+      captcha_risk: "medium"
+    
+    quality:
+      expected_word_count: 600
+      language: "zh"
+      content_type: "vertical"
+
+# =============================================================================
+# P1 优先级站点（第二批）
+# =============================================================================
+
+  # 百度百科（宠物类）
+  baidu_baike:
+    name: "百度百科"
+    domain: "baike.baidu.com"
+    priority: "P1"
+    base_url: "https://baike.baidu.com"
+    
+    crawl:
+      enabled: false  # 暂时禁用，技术难度高
+      depth: 2
+      max_pages: 2000
+      rate_limit:
+        requests_per_second: 0.5
+        concurrent_requests: 1
+    
+    categories:
+      - path: "/item/宠物"
+    
+    parsing:
+      title_selector: ".lemmaTitleH1"
+      content_selector: ".lemma-summary"
+      need_playwright: true
+    
+    anti_crawl:
+      need_proxy: true
+      need_javascript: true
+      login_required: false
+      captcha_risk: "high"
+    
+    quality:
+      expected_word_count: 1000
+      language: "zh"
+      content_type: "encyclopedia"
+
+# =============================================================================
+# 通用配置
+# =============================================================================
+
+# 全局设置
+global:
+  # User-Agent 轮换
+  user_agent_rotation: true
+  
+  # 代理池
+  proxy:
+    enabled: true
+    pool_size: 100
+    refresh_interval: 300
+  
+  # 去重
+  dedup:
+    enabled: true
+    bloom_filter_capacity: 100000000
+    simhash_threshold: 3
+  
+  # 存储
+  storage:
+    mongodb: "mongodb://localhost:27017/pet_encyclopedia_raw"
+    postgresql: "postgresql://localhost/pet_encyclopedia"
+    minio: "localhost:9000"
+  
+  # 日志
+  logging:
+    level: "INFO"
+    file: "logs/crawler.log"
+    max_bytes: 10485760  # 10MB
+    backup_count: 5
+  
+  # 监控
+  monitoring:
+    prometheus_enabled: true
+    prometheus_port: 8000

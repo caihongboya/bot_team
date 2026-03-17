@@ -1,0 +1,40 @@
+{
+  "name": "pet-encyclopedia",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db:init": "psql $DATABASE_URL -f src/lib/schema.sql",
+    "content:generate": "tsx src/scripts/generate-content.ts",
+    "content:generate:batch2": "tsx src/scripts/generate-content-batch2.ts",
+    "content:import": "tsx src/scripts/import-content.ts",
+    "content:sync": "tsx src/scripts/import-content.ts --sync"
+  },
+  "dependencies": {
+    "@types/pg": "^8.18.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "dotenv": "^17.3.1",
+    "front-matter": "^4.0.2",
+    "lucide-react": "^0.577.0",
+    "next": "14.2.35",
+    "pg": "^8.20.0",
+    "react": "^18",
+    "react-dom": "^18",
+    "tailwind-merge": "^3.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.35",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5"
+  }
+}
